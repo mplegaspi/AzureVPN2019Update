@@ -129,7 +129,52 @@ Packet sent with a source address of 10.200.0.1
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 23/23/24 ms
 ```
+For remote VPN user, my laptop dial in with SSTP tunnel, get 172.16.0.6 as remote IP.<br>
+Host route table show that 10.2.0.0/23 next hop is 172.16.0.6 and ICMP test is good.<br>
+```
+PPP adapter VNet2:
 
+   Connection-specific DNS Suffix  . :
+   IPv4 Address. . . . . . . . . . . : 172.16.0.6
+   Subnet Mask . . . . . . . . . . . : 255.255.255.255
+   Default Gateway . . . . . . . . . :
+   
+IPv4 Route Table
+===========================================================================
+Active Routes:
+Network Destination        Netmask          Gateway       Interface  Metric
+         10.2.0.0      255.255.0.0         On-link        172.16.0.6     43
+     10.2.255.255  255.255.255.255         On-link        172.16.0.6    281
+         10.3.0.0      255.255.0.0         On-link        172.16.0.6     43
+     10.3.255.255  255.255.255.255         On-link        172.16.0.6    281
+
+C:\Users\yinghli>ping 10.2.0.4
+
+Pinging 10.2.0.4 with 32 bytes of data:
+Reply from 10.2.0.4: bytes=32 time=5ms TTL=63
+Reply from 10.2.0.4: bytes=32 time=5ms TTL=63
+Reply from 10.2.0.4: bytes=32 time=4ms TTL=63
+Reply from 10.2.0.4: bytes=32 time=4ms TTL=63
+
+Ping statistics for 10.2.0.4:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 4ms, Maximum = 5ms, Average = 4ms
+
+C:\Users\yinghli>ping 10.3.1.4
+
+Pinging 10.3.1.4 with 32 bytes of data:
+Reply from 10.3.1.4: bytes=32 time=3ms TTL=63
+Reply from 10.3.1.4: bytes=32 time=5ms TTL=63
+Reply from 10.3.1.4: bytes=32 time=5ms TTL=63
+Reply from 10.3.1.4: bytes=32 time=6ms TTL=63
+
+Ping statistics for 10.3.1.4:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 3ms, Maximum = 6ms, Average = 4ms
+    
+```
 
 Transit routing setup
 ----------

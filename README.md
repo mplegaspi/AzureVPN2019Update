@@ -38,7 +38,7 @@ $vnet = Get-AzVirtualNetwork -Name VNet2 -ResourceGroupName TestRG2
 $subnet = Get-AzVirtualNetworkSubnetConfig -Name 'GatewaySubnet' -VirtualNetwork $vnet
 $gwipconfig = New-AzVirtualNetworkGatewayIpConfig -Name gwipconfig2 -SubnetId $subnet.Id -PublicIpAddressId $gwpip.Id
 ```
-Create Generation2 VpnGw5
+Create Generation2 VpnGw5, need input `-VpnGatewayGeneration` as Generation2.
 ```
 New-AzVirtualNetworkGateway -Name VNet2GW -ResourceGroupName TestRG2 -Location chinanorth2 -IpConfigurations $gwipconfig -GatewayType Vpn -VpnType RouteBased -GatewaySku VpnGw5 -VpnGatewayGeneration Generation2
 ```
@@ -68,8 +68,6 @@ On Premise VPN Site
 We setup Cisco CSR1000v to simulate remote VPN site. <br>
 Here is demo configuration on site1 Cisco CSR1000v, site1 use IKEv1 to setup IPSec VPN tunnel.
 ```
-access-list 101 permit ip 10.100.0.0 0.0.255.255 10.2.0.0 0.0.254.255
-!
 crypto isakmp policy 10
  encr aes 256
  authentication pre-share
@@ -77,20 +75,21 @@ crypto isakmp policy 10
  lifetime 28800
 crypto isakmp key cisco address 40.73.39.223
 !
+!
 crypto ipsec transform-set azure-ipsec-proposal-set esp-aes 256 esp-sha-hmac
  mode tunnel
 !
-crypto map azure-crypto-map 10 ipsec-isakmp
- set peer 40.73.39.223
- set security-association lifetime kilobytes 102400000
+crypto ipsec profile azure
  set transform-set azure-ipsec-proposal-set
- match address 101
 !
-interface Loopback0
- ip address 10.100.0.1 255.255.0.0
+interface Tunnel1
+ ip unnumbered Loopback0
+ tunnel source GigabitEthernet1
+ tunnel mode ipsec ipv4
+ tunnel destination 40.73.39.223
+ tunnel protection ipsec profile azure
 !
-interface GigabitEthernet1
- crypto map azure-crypto-map
+ip route 10.2.0.0 255.254.0.0 Tunnel1
 ```
 For detail IKEv2 configuration and setup, please refer [this](https://github.com/yinghli/azure-vpn-csr1000v). <br>
 
@@ -182,17 +181,11 @@ By default, site1, site2, site3 and remote worker can only access Azure VNET res
 But for IKEv2 and point to site VPN, you can add static route to point remote site address range to VPN tunnel. <br> 
 For IKEv1, you can modify local access list to add remote site address range into “encryption traffic” list. <br> 
 
-For example, for IKEv2 site2, you can add static route.
+For example, for IKEv2 and IKEv1 site, you can add static route.
 ```
 ip route 10.100.0.0 255.255.0.0 Tunnel1
 ip route 10.150.0.0 255.255.0.0 Tunnel1
 ip route 172.16.0.0 255.255.255.0 Tunnel1
-```
-For IKEv1 site1, you can modify access list.
-```
-access-list 101 permit ip 10.100.0.0 0.0.255.255 172.16.0.0 0.0.0.255
-access-list 101 permit ip 10.100.0.0 0.0.255.255 10.200.0.0 0.0.255.255
-access-list 101 permit ip 10.100.0.0 0.0.255.255 10.150.0.0 0.0.255.255
 ```
 For remote VPN host, you can add static route. 172.16.0.6 is current dynamic IP assigned by VPN server. It may change after next dial in. 
 ```

@@ -51,13 +51,13 @@ After VPN gateway created, we also need to create Local Network Gateway for each
 New-AzLocalNetworkGateway -Name csr100v -ResourceGroupName TestRG1 -Location chinanorth2 -GatewayIpAddress '52.130.80.146' -AddressPrefix '10.100.0.0/16'
 ```
 Then we can create site to site IPSec VPN connection.<br>
-For site1, this is IKEv1 IPSec VPN connection. We need to input ConnectionProtocol as IKEv1.
+For site1, this is IKEv1 IPSec VPN connection. We need to input `-ConnectionProtocol` as IKEv1.
 ```
 $vpngw = Get-AzVirtualNetworkGateway -Name VNet2GW -ResourceGroupName TestRG2
 $lng = Get-AzLocalNetworkGateway  -Name csr100v -ResourceGroupName TestRG2
 New-AzVirtualNetworkGatewayConnection -Name IKEv1Conn -ResourceGroupName TestRG2 -VirtualNetworkGateway1 $vpngw -LocalNetworkGateway2 $lng -ConnectionType IPsec -ConnectionProtocol IKEv1 -SharedKey 'cisco' -Location chinanorth2
 ```
-For site3, this is IKEv2 connection. We need to input ConnectionProtocol as IKEv2. You can also add customized IPSec policy for each connection.
+For site3, this is IKEv2 connection. We need to input `-ConnectionProtocol` as IKEv2. You can also add customized IPSec policy for each connection.
 ```
 $ipsecpolicy = New-AzIpsecPolicy -IkeEncryption AES256 -IkeIntegrity SHA256 -DhGroup DHGroup24 -IpsecEncryption AES256 -IpsecIntegrity SHA256 -PfsGroup None -SALifeTimeSeconds 14400 -SADataSizeKilobytes 102400000
 New-AzVirtualNetworkGatewayConnection -Name IKEv2Conn -ResourceGroupName TestRG2 -VirtualNetworkGateway1 $vpngw -LocalNetworkGateway2 $lng1 -ConnectionType IPsec -ConnectionProtocol IKEv2 -SharedKey 'cisco' -Location chinanorth2 -IpsecPolicies $ipsecpolicy

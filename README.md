@@ -178,8 +178,7 @@ Approximate round trip times in milli-seconds:
 Transit routing setup
 ----------
 By default, site1, site2, site3 and remote worker can only access Azure VNET resource. They can’t talk to each other.<br> 
-But for IKEv2 and point to site VPN, you can add static route to point remote site address range to VPN tunnel. <br> 
-For IKEv1, you can modify local access list to add remote site address range into “encryption traffic” list. <br> 
+You can add static route to support transit routing between sites <br> 
 
 For example, for IKEv2 and IKEv1 site, you can add static route.
 ```

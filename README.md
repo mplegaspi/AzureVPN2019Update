@@ -65,7 +65,34 @@ New-AzVirtualNetworkGatewayConnection -Name IKEv2Conn -ResourceGroupName TestRG2
 
 On Premise VPN Site
 ------------------
-We setup Cisco CSR1000v to simulate remote VPN site. For detail configuration and setup, please refer [this](https://github.com/yinghli/azure-vpn-csr1000v). <br>
+We setup Cisco CSR1000v to simulate remote VPN site. <br>
+Here is demo configuration on site1 Cisco CSR1000v.
+```
+access-list 101 permit ip 10.100.0.0 0.0.255.255 10.2.0.0 0.0.254.255
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 2
+ lifetime 28800
+crypto isakmp key cisco address 40.73.39.223
+!
+crypto ipsec transform-set azure-ipsec-proposal-set esp-aes 256 esp-sha-hmac
+ mode tunnel
+!
+crypto map azure-crypto-map 10 ipsec-isakmp
+ set peer 40.73.39.223
+ set security-association lifetime kilobytes 102400000
+ set transform-set azure-ipsec-proposal-set
+ match address 101
+!
+interface Loopback0
+ ip address 10.100.0.1 255.255.0.0
+!
+interface GigabitEthernet1
+ crypto map azure-crypto-map
+```
+For detail configuration and setup, please refer [this](https://github.com/yinghli/azure-vpn-csr1000v). <br>
 We also setup SSTP Point to Site VPN to simulate remote workers. For detail, please refer [this](https://github.com/yinghli/Azure-P2S-VPN). <br>
 
 Network reachability Testing

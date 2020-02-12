@@ -1,13 +1,20 @@
 AzureVPN
 ====================
 
-On 2019 Microsoft Ignite, Azure release new VPN gateway SKU VpnGw1-5. New gateway have better performance, support IKEv1 and IKEv2 at the same time and support multiple IKEv1 tunnel. This lab will setup an environment to demo this. <br> 
+On 2019 Microsoft Ignite, Azure released new VPN gateway SKU VpnGw1-5. New gateway have better performance, support IKEv1 and IKEv2 at the same time and support multiple IKEv1 tunnel. This lab will setup an environment to demo this. <br> 
 ![](https://github.com/yinghli/AzureVPN/blob/master/vpn.jpg)
 
 Lab Topology
 ------------
-We simulate three sites in this topology. Two sites connect to Azure via IKEv1 IPSec VPN, one site connect to Azure via IKEv2 IPSev VPN. In order to cover as much use case as possible, we aslo add point to site VPN and Hub-Spoke architecture at Azure side. <br>
+We simulate three sites in this topology. Two sites connect to Azure via IKEv1 IPSec VPN, one site connect to Azure via IKEv2 IPSec VPN. To cover as much use case as possible, we also add point to site VPN and Hub-Spoke architecture at Azure side. <br>
+
 ![](https://github.com/yinghli/AzureVPN/blob/master/IKE.jpg)
+
+Parameters            | Azure          |Site1         |Site2         |Site3         |VPNClient
+----------------------| -------------  |-----------   |---------     |------------  |------------
+Public IP             |40.73.39.223    |52.130.80.146 |40.73.245.64  |52.130.80.50  |Dynamic
+Local Network         |10.2.0.0/15     |10.100.0.0/16 |10.150.0.0/16 |10.200.0.0/16 |172.16.0.0/24
+Tunnel Type           |IKEv1&IKEv2&SSTP|IKEv1         |IKEv1         |IKEv2         |SSTP
 
 
 Create New VPN gateway

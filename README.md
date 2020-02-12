@@ -19,7 +19,7 @@ Tunnel Type           |IKEv1&IKEv2&SSTP|IKEv1         |IKEv1         |IKEv2     
 
 Create New VPN gateway
 ---------
-Create new VPN gateway is NOT support currently (2020 Feb). Please update PowerShell to latest version to create gateway. In this example, we create Generation 2 VpvGw5 as example. <br>
+Create new VPN gateway at Azure China Portal is NOT support currently (2020 Feb). Please update PowerShell to latest version to create gateway. In this example, we create Generation 2 VpvGw5 as example. <br>
 
 Setup resource group, virtual network and gateway subnet. 
 ```

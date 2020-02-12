@@ -66,7 +66,7 @@ New-AzVirtualNetworkGatewayConnection -Name IKEv2Conn -ResourceGroupName TestRG2
 On Premise VPN Site
 ------------------
 We setup Cisco CSR1000v to simulate remote VPN site. <br>
-Here is demo configuration on site1 Cisco CSR1000v.
+Here is demo configuration on site1 Cisco CSR1000v, site1 use IKEv1 to setup IPSec VPN tunnel.
 ```
 access-list 101 permit ip 10.100.0.0 0.0.255.255 10.2.0.0 0.0.254.255
 !
@@ -92,11 +92,44 @@ interface Loopback0
 interface GigabitEthernet1
  crypto map azure-crypto-map
 ```
-For detail configuration and setup, please refer [this](https://github.com/yinghli/azure-vpn-csr1000v). <br>
+For detail IKEv2 configuration and setup, please refer [this](https://github.com/yinghli/azure-vpn-csr1000v). <br>
+
 We also setup SSTP Point to Site VPN to simulate remote workers. For detail, please refer [this](https://github.com/yinghli/Azure-P2S-VPN). <br>
 
 Network reachability Testing
 -----------
+From site1, after VPN tunnle is up. ICMP test to Hub VNET2 and Spoke VNET3 is working.
+```
+csrvm#ping 10.2.0.4 source 10.100.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.2.0.4, timeout is 2 seconds:
+Packet sent with a source address of 10.100.0.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 23/24/26 ms
+
+csrvm#ping 10.3.1.4 source 10.100.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.1.4, timeout is 2 seconds:
+Packet sent with a source address of 10.100.0.1
+!!!!!
+```
+From site3, which is IKEv2 IPSec VPN setup. ICMP test to Hub VNET2 and Spoke VNET3 is working.
+```
+csr1000v2#ping 10.2.0.4 source 10.200.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.2.0.4, timeout is 2 seconds:
+Packet sent with a source address of 10.200.0.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 24/24/26 ms
+
+csr1000v2#ping 10.3.1.4 source 10.200.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.1.4, timeout is 2 seconds:
+Packet sent with a source address of 10.200.0.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 23/23/24 ms
+```
+
 
 Transit routing setup
 ----------

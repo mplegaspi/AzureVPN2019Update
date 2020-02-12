@@ -57,8 +57,9 @@ $vpngw = Get-AzVirtualNetworkGateway -Name VNet2GW -ResourceGroupName TestRG2
 $lng = Get-AzLocalNetworkGateway  -Name csr100v -ResourceGroupName TestRG2
 New-AzVirtualNetworkGatewayConnection -Name IKEv1Conn -ResourceGroupName TestRG2 -VirtualNetworkGateway1 $vpngw -LocalNetworkGateway2 $lng -ConnectionType IPsec -ConnectionProtocol IKEv1 -SharedKey 'cisco' -Location chinanorth2
 ```
-For site3, this is IKEv2 connection. We need to input ConnectionProtocol as IKEv2.
+For site3, this is IKEv2 connection. We need to input ConnectionProtocol as IKEv2. You can also add customized IPSec policy for each connection.
 ```
+$ipsecpolicy = New-AzIpsecPolicy -IkeEncryption AES256 -IkeIntegrity SHA256 -DhGroup DHGroup24 -IpsecEncryption AES256 -IpsecIntegrity SHA256 -PfsGroup None -SALifeTimeSeconds 14400 -SADataSizeKilobytes 102400000
 New-AzVirtualNetworkGatewayConnection -Name IKEv2Conn -ResourceGroupName TestRG2 -VirtualNetworkGateway1 $vpngw -LocalNetworkGateway2 $lng1 -ConnectionType IPsec -ConnectionProtocol IKEv2 -SharedKey 'cisco' -Location chinanorth2 -IpsecPolicies $ipsecpolicy
 ```
 

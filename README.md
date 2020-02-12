@@ -63,7 +63,10 @@ $ipsecpolicy = New-AzIpsecPolicy -IkeEncryption AES256 -IkeIntegrity SHA256 -DhG
 New-AzVirtualNetworkGatewayConnection -Name IKEv2Conn -ResourceGroupName TestRG2 -VirtualNetworkGateway1 $vpngw -LocalNetworkGateway2 $lng1 -ConnectionType IPsec -ConnectionProtocol IKEv2 -SharedKey 'cisco' -Location chinanorth2 -IpsecPolicies $ipsecpolicy
 ```
 
-
+On Premise VPN Site
+------------------
+We setup Cisco CSR1000v to simulate remote VPN site. For detail configuration and setup, please refer [this](https://github.com/yinghli/azure-vpn-csr1000v).
+We also setup SSTP Point to Site VPN to simulate remote workers. For detail, please refer [this](https://github.com/yinghli/Azure-P2S-VPN).
 
 Network reachability Testing
 -----------

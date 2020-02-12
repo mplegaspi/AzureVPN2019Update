@@ -178,3 +178,22 @@ Approximate round trip times in milli-seconds:
 
 Transit routing setup
 ----------
+By default, site1, site2, site3 and remote worker can only access Azure VNET resource. They can’t talk to each other. But for IKEv2 and point to site VPN, you can add static route to point remote site address range to VPN tunnel. For IKEv1, you can modify local access list to add remote site address range into “encryption traffic” list. 
+For example, for IKEv2 site2, you can add static route.
+```
+ip route 10.100.0.0 255.255.0.0 Tunnel1
+ip route 10.150.0.0 255.255.0.0 Tunnel1
+ip route 172.16.0.0 255.255.255.0 Tunnel1
+```
+For IKEv1 site1, you can modify access list.
+```
+access-list 101 permit ip 10.100.0.0 0.0.255.255 172.16.0.0 0.0.0.255
+access-list 101 permit ip 10.100.0.0 0.0.255.255 10.200.0.0 0.0.255.255
+access-list 101 permit ip 10.100.0.0 0.0.255.255 10.150.0.0 0.0.255.255
+```
+For remote VPN host, you can add static route. 172.16.0.6 is current dynamic IP assigned by VPN server. It may change after next dial in. 
+```
+route add 10.200.0.0 mask 255.255.0.0 -p 172.16.0.6
+route add 10.100.0.0 mask 255.255.0.0 -p 172.16.0.6
+route add 10.150.0.0 mask 255.255.0.0 -p 172.16.0.6
+```

@@ -6,7 +6,7 @@ On 2019 Microsoft Ignite, Azure release new VPN gateway SKU VpnGw1-5. New gatewa
 
 Lab Topology
 ------------
-We simulate thress sites in this topology. Two sites connect to Azure via IKEv1 IPSec VPN, one site connect to Azure via IKEv2 IPSev VPN. In order to cover as much use case as possible, we aslo add point to site VPN and Hub-Spoke architecture at Azure side. <br>
+We simulate three sites in this topology. Two sites connect to Azure via IKEv1 IPSec VPN, one site connect to Azure via IKEv2 IPSev VPN. In order to cover as much use case as possible, we aslo add point to site VPN and Hub-Spoke architecture at Azure side. <br>
 ![](https://github.com/yinghli/AzureVPN/blob/master/IKE.jpg)
 
 

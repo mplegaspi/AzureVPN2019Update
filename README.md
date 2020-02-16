@@ -1,4 +1,4 @@
-AzureVPN
+Azure VPN 2019 Update
 ====================
 
 On 2019 Microsoft Ignite, Azure released new VPN gateway SKU VpnGw1-5. New gateway have better performance, support IKEv1 and IKEv2 at the same time and support multiple IKEv1 tunnel. This lab will setup an environment to demo this. <br> 
